@@ -1,2 +1,2 @@
 all:
-	g++ *.cpp -O3 -o domino
+	g++ *.cpp -O3 -o domino -pg

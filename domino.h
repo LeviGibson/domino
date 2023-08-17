@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+#define CORNER_INDEX_COUNT 40320
+
 #define U64 unsigned long long
 
 //ordinal values of each move (for make_move function)
@@ -63,6 +65,13 @@ class Domino{
         void undo_move();
         //is a move stupid (like R2 R2 for example)
         int is_repetition(int move);
+
+        //is a repetition when solving corners
+        //no R2 L2
+        //no more than 3 half turns in a row
+        int is_repetition_corners(int move);
+
+
         std::vector<int> history;
 
     private:
@@ -76,6 +85,8 @@ class Domino{
         void move_L2();
         void move_B2();
         void move_F2();
+
+        int savedCornerIndex;
 
         //the state of the domino
         int corners[8];

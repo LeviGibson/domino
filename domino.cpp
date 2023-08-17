@@ -28,7 +28,7 @@
 #define DB 6
 #define DL 7
 
-std::string MOVECHARS[7] = {"U", "UP", "U2", "R2", "F2", "B2", "L2"};
+std::string MOVECHARS[7] = {"U", "U'", "U2", "R2", "F2", "B2", "L2"};
 
 const int DEFAULT_CORNERS[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 const int DEFAULT_EDGES[8] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -49,6 +49,9 @@ void Domino::reset(){
     memcpy(edges, DEFAULT_EDGES, sizeof(edges));
     memcpy(corners, DEFAULT_CORNERS, sizeof(corners));
     clear_history();
+
+    //changes are being made to the cube, so the corner index is no longer valid
+    savedCornerIndex = -1;
 }
 
 //returns 1 if domino is solved
@@ -143,15 +146,38 @@ int CORNER_SOLVED_STATES_HTR[192] = {0,16,288,304,576,592,1565,1574,1783,1799,19
         }
 */
 
+int binarySearch(int* arr, int l, int r, int x)
+{
+    while (l <= r) {
+        int m = l + (r - l) / 2;
+ 
+        // Check if x is present at mid
+        if (arr[m] == x)
+            return m;
+ 
+        // If x greater, ignore left half
+        if (arr[m] < x)
+            l = m + 1;
+ 
+        // If x is smaller, ignore right half
+        else
+            r = m - 1;
+    }
+ 
+    // If we reach here, then element was not present
+    return -1;
+}
+
 //this can be sped up with a binary search
 //but im lazy so no
 int Domino::are_corners_solved_htr(){
     int index = corner_index();
-    for (int i = 0; i < 192; i++){
-        if (index == CORNER_SOLVED_STATES_HTR[i])
-            return 1;
-    }
-    return 0;
+    //perform a binary search for the corner index in the CORNER_SOLVED_STATES_HTR array
+    int result = binarySearch(CORNER_SOLVED_STATES_HTR, 0, 191, index);
+    if (result == -1)
+        return 0;
+    else
+        return 1;
 }
 
 //i am very proud of this
@@ -162,6 +188,10 @@ int Domino::are_corners_solved_htr(){
 //turns the list of corners into a path, where the width of the tree diminishes by 1 each time you go down a node
 //multiplies each step taken in the tree by the number of leaf nodes in the subtree, and then you have a unique index! look at that!
 int Domino::corner_index(){
+    if (savedCornerIndex != -1){
+        return savedCornerIndex;
+    }
+
     int path[8] = {-1, -1, -1, -1, -1, -1, -1};
     int indecies[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
@@ -172,12 +202,17 @@ int Domino::corner_index(){
         }
     }
 
-    return 5040*path[0] + 720*path[1] + 120*path[2] + 24*path[3] + 6*path[4] + 2*path[5] + 1*path[6];
+    int ret = 5040*path[0] + 720*path[1] + 120*path[2] + 24*path[3] + 6*path[4] + 2*path[5] + 1*path[6];
+    savedCornerIndex = ret;
+
+    return ret;
 }
 
 //low-level function
 //set the corners to a state, with the same indexing system used in the corner_index function
 void Domino::set_corners_from_index(int index){
+    clear_history();
+
     //make sure index is within range
     assert(index >= 0);
     assert(index < 40320);
@@ -281,6 +316,9 @@ void Domino::move_B2(){
 };
 
 void Domino::make_move(int move){
+    //changes are being made to the cube, so the corner index is no longer valid
+    savedCornerIndex = -1;
+
     if (move == U)
         move_U();
     else if (move == UP)
@@ -302,6 +340,9 @@ void Domino::make_move(int move){
 }
 
 void Domino::undo_move(){
+    //changes are being made to the cube, so the corner index is no longer valid
+    savedCornerIndex = -1;
+
     assert(history.size() > 0);
     int move = history[history.size()-1];
 
@@ -327,6 +368,8 @@ void Domino::undo_move(){
 
 void Domino::clear_history(){
     history.clear();
+    //changes are being made to the cube, so the corner index is no longer valid
+    savedCornerIndex = -1;
 }
 
 int Domino::is_repetition(int move){
@@ -363,6 +406,42 @@ int Domino::is_repetition(int move){
     return 0;
 }
 
+int is_move_qt(int move){
+    if (move == U || move == UP)
+        return 1;
+    return 0;
+}
+
+int Domino::is_repetition_corners(int move){
+    if (is_repetition(move))
+        return 1;
+
+    if (history.size() == 0)
+        return 0;
+    
+    int lastmove = history[history.size()-1];
+
+    if (move == R2 && lastmove == L2)
+        return 1;
+    if (move == L2 && lastmove == R2)
+        return 1;
+    if (move == F2 && lastmove == B2)
+        return 1;
+    if (move == B2 && lastmove == F2)
+        return 1;
+    
+    // // no more than 3 half turns in a row
+    if (history.size() >= 3){
+        int lastlastmove = history[history.size()-2];
+        int lastlastlastmove = history[history.size()-3];
+        if (!is_move_qt(move) && !is_move_qt(lastmove) && !is_move_qt(lastlastmove) && !is_move_qt(lastlastlastmove)){
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 void Domino::parse_alg(std::string alg){
     std::stringstream ss(alg);
 
@@ -391,6 +470,8 @@ void Domino::parse_alg(std::string alg){
 //TODO
 // set the domino to a completely random solvable state
 void Domino::set_random_state(){
+        //changes are being made to the cube, so the corner index is no longer valid
+    savedCornerIndex = -1;
     reset();
     int parity = (rand() % 2);
 
