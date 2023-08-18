@@ -1,12 +1,12 @@
 #include "domino.h"
 #include "search.h"
-#include "stats.h"
 #include "corners.h"
 #include <iostream>
 
 int main(){
     srand((unsigned) time(NULL));
     Corners::init_corners();
+    init_hash();
 
     Domino dom = Domino();
     dom.set_random_state();

@@ -18,7 +18,7 @@ int search(int depth, Domino* domino){
 
     int optimal = UNSOLVED;
 
-    int quarterTurnCount = domino.qt_count();
+    int quarterTurnCount = domino->qt_count();
 
     for (int move = 0; move < 7; move++){
         if (domino->is_repetition(move))
@@ -29,7 +29,7 @@ int search(int depth, Domino* domino){
 
         if (NO_EXTRA_QUARTER_TURNS && (move == U || move == UP)){
             if (domino->qt_count() > quarterTurnCount){
-                undo_move();
+                domino->undo_move();
                 ply--;
                 continue;
             }

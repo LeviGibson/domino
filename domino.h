@@ -18,6 +18,12 @@ const int F2 = 4;
 const int B2 = 5;
 const int L2 = 6;
 
+void init_hash();
+
+//yes or no, does this binary file exist?
+//no particular reason why it's in the Domino file, it's just convenient and used a couple of times in the program
+int binary_file_exists(std::string path);
+
 extern std::string MOVECHARS[7];
 
 class Domino{
@@ -73,6 +79,8 @@ class Domino{
 
         //How many quarter turns does it take to solve the corners
         int qt_count();
+
+        U64 domino_hash();
 
         std::vector<int> history;
 

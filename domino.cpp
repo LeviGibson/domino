@@ -185,6 +185,34 @@ int Domino::are_corners_solved_htr(){
         return 1;
 }
 
+U64 corner_hash_keys[8][8];
+U64 edge_hash_keys[8][8];
+
+void init_hash(){
+    if (binary_file_exists("hashKeys.bin")){
+        // read_binary_file();
+    } else {
+        // generate_corner_tables();
+        // save_corner_table();
+    }
+}
+
+U64 Domino::domino_hash(){
+    
+}
+
+int binary_file_exists(std::string path){
+    FILE *codefile;
+   if(codefile=fopen(path.c_str(),"r")) {
+       fclose(codefile);
+       return 1;
+   } else {
+       return 0;
+   }
+
+   return 0;
+}
+
 //i am very proud of this
 //please read it and be WOWED
 //creates a unique index for each possible corner case, and it's the most compact it can be!

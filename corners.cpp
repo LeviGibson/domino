@@ -119,18 +119,6 @@ void save_corner_table(){
     file.close();
 }
 
-int binary_file_exists(){
-    FILE *codefile;
-   if(codefile=fopen("cornerQuarterTurns.bin","r")) {
-       fclose(codefile);
-       return 1;
-   } else {
-       return 0;
-   }
-
-   return 0;
-}
-
 void read_binary_file(){
     FILE *fin = fopen("cornerQuarterTurns.bin", "rb");
     int _tmp = fread(Corners::quarter_turn_counts, sizeof(int), CORNER_INDEX_COUNT, fin);
@@ -138,7 +126,7 @@ void read_binary_file(){
 }
 
 void Corners::init_corners(){
-    if (binary_file_exists()){
+    if (binary_file_exists("cornerQuarterTurns.bin")){
         read_binary_file();
     } else {
         generate_corner_tables();
