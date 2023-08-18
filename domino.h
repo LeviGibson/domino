@@ -7,6 +7,28 @@
 
 #define U64 unsigned long long
 
+// the position of each corner in the "corners" array
+// follows the standard bld scheme (i think idk or something close)
+#define ULB 0
+#define URB 1
+#define URF 2
+#define ULF 3
+#define DLF 4
+#define DRF 5
+#define DRB 6
+#define DLB 7
+
+// the position of each edge in the "edges" array
+// follows the standard bld scheme (i think idk or something close)
+#define UB 0
+#define UR 1
+#define UF 2
+#define UL 3
+#define DF 4
+#define DR 5
+#define DB 6
+#define DL 7
+
 //ordinal values of each move (for make_move function)
 //this program does not do D moves because they're dumb
 //you can solve a domino optimally with just these moves, and D moves only widen the search tree
@@ -54,6 +76,9 @@ class Domino{
         //prints a graphical depiction of the domino
         void print_domino();
 
+        //prints all the pieces, in integer form
+        void print_pieces();
+
         //do a move from a move ordinal
         void make_move(int move);
 
@@ -84,6 +109,10 @@ class Domino{
 
         std::vector<int> history;
 
+        //the state of the domino
+        int corners[8];
+        int edges[8];
+
     private:
         //very low-level dont use these
         //they don't update the history
@@ -98,9 +127,7 @@ class Domino{
 
         int savedCornerIndex;
 
-        //the state of the domino
-        int corners[8];
-        int edges[8];
+        
 
         // very low level, cycles four corners/edges to make a move
         void corner_cycle(int c1, int c2, int c3, int c4);

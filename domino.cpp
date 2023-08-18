@@ -4,30 +4,11 @@
 #include <sstream>
 #include <cassert>
 #include <stdlib.h>
+#include <fstream>
 #include "domino.h"
 #include "corners.h"
 
-// the position of each corner in the "corners" array
-// follows the standard bld scheme (i think idk or something close)
-#define ULB 0
-#define URB 1
-#define URF 2
-#define ULF 3
-#define DLF 4
-#define DRF 5
-#define DRB 6
-#define DLB 7
 
-// the position of each edge in the "edges" array
-// follows the standard bld scheme (i think idk or something close)
-#define UB 0
-#define UR 1
-#define UF 2
-#define UL 3
-#define DF 4
-#define DR 5
-#define DB 6
-#define DL 7
 
 std::string MOVECHARS[7] = {"U", "U'", "U2", "R2", "F2", "B2", "L2"};
 
@@ -185,20 +166,102 @@ int Domino::are_corners_solved_htr(){
         return 1;
 }
 
+
+void print_hash(U64 hash){
+
+    int32_t rank = 8;
+    for (int32_t square = 0; square < 64; square++){
+        if (square % 8 == 0) {
+            printf("\n");
+            rank--;
+        }
+        if ((hash >> square)&1ULL){
+            printf("1  ");
+        } else{
+            printf(".  ");
+        }
+    }
+    printf("\n");
+}
+
 U64 corner_hash_keys[8][8];
 U64 edge_hash_keys[8][8];
 
+void generate_hash_keys(){
+    for (int i = 0; i < 8; i++){
+        for (int j = 0; j < 8; j++){
+            corner_hash_keys[i][j] = ((U64)rand()) | (((U64)rand()) << 32);
+            edge_hash_keys[i][j] = ((U64)rand()) | (((U64)rand()) << 32);
+        }
+    }
+}
+
+//write hash keys to binary file
+void write_hash_keys(){
+    std::fstream file;
+    file.open("hashKeys.bin", std::ios_base::out|std::ios_base::binary);
+    if(!file.is_open()) {
+        std::cout<<"Unable to open the file\n";
+        assert(0);
+    }
+
+    file.write((const char*)corner_hash_keys, sizeof(corner_hash_keys));
+    file.write((const char*)edge_hash_keys, sizeof(edge_hash_keys));
+
+    file.close();
+}
+
+//load hash keys from "hashKeys.bin"
+void read_hash_keys(){
+    FILE *fin = fopen("hashKeys.bin", "rb");
+    int _tmp = fread(corner_hash_keys, sizeof(U64), 8*8, fin);
+    _tmp = fread(edge_hash_keys, sizeof(U64), 8*8, fin);
+    fclose(fin);
+}
+
+//if hash keys are already made, load them, otherwise, generate and save them
 void init_hash(){
     if (binary_file_exists("hashKeys.bin")){
-        // read_binary_file();
+        read_hash_keys();
     } else {
-        // generate_corner_tables();
-        // save_corner_table();
+        generate_hash_keys();
+        write_hash_keys();
+    }
+
+    print_hash(corner_hash_keys[0][0]);
+}
+
+void normalize_piece_set(int* c, int* e){
+    const int* transformer = NULL;
+    if (e[0] == UB || e[0] == DB)
+        transformer = &SOLVED_STATE_1[0];
+    if (e[0] == UR || e[0] == DR)
+        transformer = &SOLVED_STATE_2[0];
+    if (e[0] == UF || e[0] == DF)
+        transformer = &SOLVED_STATE_3[0];
+    if (e[0] == UL || e[0] == DL)
+        transformer = &SOLVED_STATE_4[0];
+    
+    for (int i = 0; i < 8; i++){
+        c[i] = transformer[c[i]];
+        e[i] = transformer[e[i]];
     }
 }
 
 U64 Domino::domino_hash(){
-    
+    int tmpCorners[8];
+    int tmpEdges[8];
+    memcpy(tmpCorners, corners, sizeof(corners));
+    memcpy(tmpEdges, edges, sizeof(edges));
+
+    normalize_piece_set(tmpCorners, tmpEdges);
+
+    U64 hash = 0ULL;
+    for (int i = 0; i < 8; i++){
+        hash ^= corner_hash_keys[i][tmpCorners[i]];
+        hash ^= edge_hash_keys[i][tmpEdges[i]];
+    }
+    return hash;
 }
 
 int binary_file_exists(std::string path){
@@ -307,7 +370,23 @@ void Domino::print_domino(){
     std::cout << CORNER_RL_COLORS[is_corner_in_htr(7, corners[7])][corners[7]] << UD_COLORS[corners[7]] << UD_COLORS[edges[6]] << UD_COLORS[corners[6]] << CORNER_RL_COLORS[is_corner_in_htr(6, corners[6])][corners[6]] << std::endl;
 
     std::cout << " " << CORNER_FB_COLORS[is_corner_in_htr(7, corners[7])][corners[7]] << EDGE_SIDE_COLORS[edges[6]] << CORNER_FB_COLORS[is_corner_in_htr(6, corners[6])][corners[6]] << std::endl;
+    std::cout << std::endl;
 };
+
+void Domino::print_pieces(){
+    for (int i = 0; i < 8; i++){
+        printf("%d ", corners[i]);
+    }
+
+    printf("\n");
+
+    for (int i = 0; i < 8; i++){
+        printf("%d ", edges[i]);
+    }
+
+    printf("\n");
+    printf("\n");
+}
 
 void Domino::move_U(){
     corner_cycle(ULB, URB, URF, ULF);
