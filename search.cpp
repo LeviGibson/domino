@@ -2,6 +2,7 @@
 
 #define UNSOLVED 1000
 int ply = 0;
+int NO_EXTRA_QUARTER_TURNS = 0;
 
 std::vector<int> solution;
 
@@ -17,12 +18,23 @@ int search(int depth, Domino* domino){
 
     int optimal = UNSOLVED;
 
+    int quarterTurnCount = domino.qt_count();
+
     for (int move = 0; move < 7; move++){
         if (domino->is_repetition(move))
             continue;
 
         domino->make_move(move);
         ply++;
+
+        if (NO_EXTRA_QUARTER_TURNS && (move == U || move == UP)){
+            if (domino->qt_count() > quarterTurnCount){
+                undo_move();
+                ply--;
+                continue;
+            }
+        }
+
         int branchval = search(depth-1, domino);
         ply--;
         domino->undo_move();

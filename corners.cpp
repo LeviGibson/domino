@@ -54,18 +54,6 @@ int cornersearch(int depth, Domino* domino){
 }
 
 int find_qt_count(Domino* domino){
-    //quickly check if there is a U D' mirror already stored
-    // domino->parse_alg("R2 L2 U F2 B2 U'");
-    // for (int depth = 0; depth < 4; depth++){
-    //     domino->clear_history();
-    //     qtsDone = 0;
-        
-    //     int result = cornersearch(depth, domino);
-    //     if (result != UNSOLVED){
-    //         return result;
-    //     }
-    // }
-    // domino->parse_alg("R2 L2 U F2 B2 U'");
 
     //search for a solution
     for (int depth = 0; depth < 13; depth++){

@@ -71,6 +71,8 @@ class Domino{
         //no more than 3 half turns in a row
         int is_repetition_corners(int move);
 
+        //How many quarter turns does it take to solve the corners
+        int qt_count();
 
         std::vector<int> history;
 

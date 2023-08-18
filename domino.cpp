@@ -5,6 +5,7 @@
 #include <cassert>
 #include <stdlib.h>
 #include "domino.h"
+#include "corners.h"
 
 // the position of each corner in the "corners" array
 // follows the standard bld scheme (i think idk or something close)
@@ -108,6 +109,10 @@ int Domino::are_corners_solved(){
     if (index == 0 || index == 5898 || index == 11536 || index == 15129)
         return 1;
     return 0;
+}
+
+int Domino::qt_count(){
+    return Corners::quarter_turn_counts[corner_index()];
 }
 
 //every single state that has corners solved relative to HTR
