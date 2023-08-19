@@ -1,5 +1,7 @@
 #include "pruning.h"
 #include <cstring>
+#include <fstream>
+#include <cassert>
 
 Pruning::HashEntry Pruning::hashTable[HASH_TABLE_SIZE];
 int Pruning::ply;
@@ -92,10 +94,29 @@ void generate_table(){
     printf("Generated pruning table with %d nodes and %d collisions (%f%% capacity)\n", Pruning::nodes, Pruning::collisions, (float)Pruning::nodes*100 / (float)HASH_TABLE_SIZE);
 }
 
+void save_table(){
+    std::fstream file;
+    file.open("pruningTable.bin", std::ios_base::out|std::ios_base::binary);
+    if(!file.is_open()) {
+        std::cout<<"Unable to open the file\n";
+        assert(0);
+    }
+
+    file.write((const char*)Pruning::hashTable, sizeof(Pruning::hashTable));
+    file.close();
+}
+
+void load_table(){
+    FILE *fin = fopen("pruningTable.bin", "rb");
+    int _tmp = fread(Pruning::hashTable, sizeof(Pruning::HashEntry), HASH_TABLE_SIZE, fin);
+    fclose(fin);
+}
+
 void Pruning::init_pruning(){
     if (binary_file_exists("pruningTable.bin")){
-        printf("lol implement this plz\n");
+        load_table();
     } else {
         generate_table();
+        save_table();
     }
 }
