@@ -13,7 +13,7 @@ int Pruning::collisions;
 void Pruning::search(int depth, Domino* domino){
     nodes++;
     U64 dominoHash = domino->domino_hash();
-    HashEntry* entry = &hashTable[dominoHash % HASH_TABLE_SIZE];
+    HashEntry* entry = &hashTable[dominoHash % HASH_DIVISOR];
 
     // I think this is what chaining is
     // Or something of the sort
@@ -22,7 +22,9 @@ void Pruning::search(int depth, Domino* domino){
         int numCollisions = 1;
         while (1){
             collisions++;
-            entry = &hashTable[(dominoHash % HASH_TABLE_SIZE) + numCollisions];
+            int index = (dominoHash % HASH_DIVISOR) + numCollisions;
+            assert(index < (HASH_TABLE_SIZE));
+            entry = &hashTable[index];
             if (entry->proximity != -1 && dominoHash != entry->key){
                 numCollisions++;
                 // printf("Everything just broke wheee try again plz\n");
@@ -53,7 +55,7 @@ void Pruning::search(int depth, Domino* domino){
 
 int Pruning::proximity_to_solved(Domino *dom) {
     U64 key = dom->domino_hash();
-    HashEntry* entry = &hashTable[key % HASH_TABLE_SIZE];
+    HashEntry* entry = &hashTable[key % HASH_DIVISOR];
 
     if (entry->proximity == -1)
         return -1;
@@ -63,7 +65,7 @@ int Pruning::proximity_to_solved(Domino *dom) {
     else {
         int numCollisions = 1;
         while (1){
-            entry = &hashTable[(key % HASH_TABLE_SIZE)+numCollisions];
+            entry = &hashTable[(key % HASH_DIVISOR)+numCollisions];
 
             if (entry->proximity == -1)
                 return -1;

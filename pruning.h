@@ -1,7 +1,14 @@
 #include "domino.h"
 
+//The size of the hash table
 //adjust this if there are problems
 #define HASH_TABLE_SIZE 10000000ULL
+
+//Only do he mod operation with this value, not HASH_TABLE_SIZE
+//add a bit of padding at the end of the array
+//because otherwise me might accidently store / search for values in indecies that are larger than the array
+//learned that the hard way
+#define HASH_DIVISOR (HASH_TABLE_SIZE-10)
 
 namespace Pruning{
     extern int nodes;
