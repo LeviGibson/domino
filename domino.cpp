@@ -210,8 +210,8 @@ U64 edge_hash_keys[8][8];
 void generate_hash_keys(){
     for (int i = 0; i < 8; i++){
         for (int j = 0; j < 8; j++){
-            corner_hash_keys[i][j] = ((U64)rand()) | (((U64)rand()) << 32);
-            edge_hash_keys[i][j] = ((U64)rand()) | (((U64)rand()) << 32);
+            corner_hash_keys[i][j] = ((U64)std::rand()) | (((U64)std::rand()) << 32);
+            edge_hash_keys[i][j] = ((U64)std::rand()) | (((U64)std::rand()) << 32);
         }
     }
 }
@@ -611,7 +611,7 @@ void Domino::set_random_state(){
         //changes are being made to the cube, so the corner index is no longer valid
     savedCornerIndex = -1;
     reset();
-    int parity = (rand() % 2);
+    int parity = (std::rand() % 2);
 
     //50% chance of swapping parity
     if (parity){
@@ -621,11 +621,11 @@ void Domino::set_random_state(){
 
     //swap each piece with a random counterpart (including itself)
     for (int piece = 0; piece < 8; piece++){
-        edge_swap(piece, rand()%8);
+        edge_swap(piece, std::rand()%8);
     }
 
     for (int piece = 0; piece < 8; piece++){
-        corner_swap(piece, rand()%8);
+        corner_swap(piece, std::rand()%8);
     }
 }
 
