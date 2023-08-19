@@ -8,7 +8,27 @@
 #include "domino.h"
 #include "corners.h"
 
+// the position of each corner in the "corners" array
+// follows the standard bld scheme (i think idk or something close)
+#define ULB 0
+#define URB 1
+#define URF 2
+#define ULF 3
+#define DLF 4
+#define DRF 5
+#define DRB 6
+#define DLB 7
 
+// the position of each edge in the "edges" array
+// follows the standard bld scheme (i think idk or something close)
+#define UB 0
+#define UR 1
+#define UF 2
+#define UL 3
+#define DF 4
+#define DR 5
+#define DB 6
+#define DL 7
 
 std::string MOVECHARS[7] = {"U", "U'", "U2", "R2", "F2", "B2", "L2"};
 
@@ -227,8 +247,6 @@ void init_hash(){
         generate_hash_keys();
         write_hash_keys();
     }
-
-    print_hash(corner_hash_keys[0][0]);
 }
 
 void normalize_piece_set(int* c, int* e){
@@ -386,6 +404,14 @@ void Domino::print_pieces(){
 
     printf("\n");
     printf("\n");
+}
+
+void Domino::print_moves() {
+    for (int i = 0; i < history.size(); i++) {
+        std::cout << MOVECHARS[history[i]] << " ";
+    }
+    std::cout << std::endl;
+    
 }
 
 void Domino::move_U(){

@@ -1,4 +1,6 @@
 #include "search.h"
+#include "pruning.h"
+#include <cassert>
 
 #define UNSOLVED 1000
 int ply = 0;
@@ -6,10 +8,21 @@ int NO_EXTRA_QUARTER_TURNS = 0;
 
 std::vector<int> solution;
 
-int search(int depth, Domino* domino){
+int search(int depth, int extended, Domino* domino){
     if (domino->is_domino_solved()){
         solution = domino->history;
         return ply;
+    }
+
+    int pruningTableRes = Pruning::proximity_to_solved(domino);
+    if (!extended && pruningTableRes != -1){
+        // assert(depth == 0);
+        depth = pruningTableRes;
+        extended = 1;
+    }
+
+    if (extended && pruningTableRes == -1){
+        return UNSOLVED;
     }
 
     if (depth == 0){
@@ -35,7 +48,7 @@ int search(int depth, Domino* domino){
             }
         }
 
-        int branchval = search(depth-1, domino);
+        int branchval = search(depth-1, extended, domino);
         ply--;
         domino->undo_move();
 
@@ -62,7 +75,7 @@ int Search::find_optimal(Domino domino){
 
     for (int depth = 0; depth < 20; depth++){
         std::cout << "searching depth " << depth << std::endl;
-        result = search(depth, &domino);
+        result = search(depth, 0, &domino);
         if (result != UNSOLVED)
             break;
     }
