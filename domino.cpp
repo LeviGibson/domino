@@ -511,15 +511,22 @@ void Domino::clear_history(){
 }
 
 int Domino::is_repetition(int move){
-    if (history.size() == 0)
+    if (history.size() == 0){
         return 0;
+    }
+
+    int lastlastmove = -1;
+
+    if (history.size() != 1){
+        lastlastmove = history[history.size()-2];
+    }
 
     int lastmove = history[history.size()-1];
-    int lastlastmove = history[history.size()-2];
 
     //if it's a move repetition, it's a repetition
-    if (move == lastmove)
+    if (move == lastmove){
         return 1;
+    }
 
     //U, U', and U2 all cancel with each other
     if (move == U || move == UP || move == U2){

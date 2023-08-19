@@ -65,10 +65,11 @@ void print_solution(){
     for(unsigned int i = 0; i < vecSize; i++){
         std::cout << MOVECHARS[solution[i]] << " ";
     }
+    std::cout << "(" << solution.size() << ")";
     std::cout << std::endl;
 }
 
-int Search::find_optimal(Domino domino){
+int Search::find_optimal(Domino domino, int print){
     ply = 0;
     int result;
     domino.clear_history();
@@ -80,8 +81,10 @@ int Search::find_optimal(Domino domino){
             break;
     }
 
-    std::cout << result << std::endl;
-    print_solution();
+    // if (print())
+    // std::cout << result << std::endl;
+    if (print)
+        print_solution();
 
-    return 0;
+    return solution.size();
 }
