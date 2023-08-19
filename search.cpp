@@ -69,7 +69,9 @@ void print_solution(){
     std::cout << std::endl;
 }
 
-int Search::find_optimal(Domino domino, int print){
+int Search::find_optimal(Domino domino, int print, int noExtraQts){
+    NO_EXTRA_QUARTER_TURNS = noExtraQts;
+
     ply = 0;
     int result;
     domino.clear_history();
