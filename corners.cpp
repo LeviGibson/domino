@@ -5,7 +5,7 @@
 #define UNSOLVED 10000
 
 int Corners::quarter_turn_counts[CORNER_INDEX_COUNT];
-std::vector<int> cornerSolution;
+Algorithm cornerSolution;
 
 int qtsDone = 0;
 int cornersearch(int depth, Domino* domino){

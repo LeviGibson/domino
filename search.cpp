@@ -6,7 +6,7 @@
 int ply = 0;
 int NO_EXTRA_QUARTER_TURNS = 0;
 
-std::vector<int> solution;
+Algorithm solution;
 
 int search(int depth, int extended, Domino* domino){
     if (domino->is_domino_solved()){
@@ -70,6 +70,8 @@ void print_solution(){
 }
 
 int Search::find_optimal(Domino domino, int print, int noExtraQts){
+    solution = Algorithm();
+
     NO_EXTRA_QUARTER_TURNS = noExtraQts;
 
     ply = 0;

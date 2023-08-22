@@ -26,6 +26,23 @@ int binary_file_exists(std::string path);
 
 extern std::string MOVECHARS[7];
 
+// a simple class
+// represents a sequence of moves
+// basically just a vector, but with a few added features
+class Algorithm{
+    public:
+        Algorithm();
+        void add(int move);
+        void pop();
+        void print(int verbose=1);
+        int size();
+        void clear();
+        std::vector<int> moves;
+
+        int& operator[] (size_t i);
+        // void operator= (Algorithm a);
+};
+
 class Domino{
     public:
         Domino();
@@ -90,7 +107,7 @@ class Domino{
         //THIS GENERATES THE SAME HASH FOR MIRRORS
         U64 domino_hash();
 
-        std::vector<int> history;
+        Algorithm history;
 
         //the state of the domino
         int corners[8];
@@ -109,8 +126,6 @@ class Domino{
         void move_F2();
 
         int savedCornerIndex;
-
-        
 
         // very low level, cycles four corners/edges to make a move
         void corner_cycle(int c1, int c2, int c3, int c4);

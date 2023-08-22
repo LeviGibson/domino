@@ -474,7 +474,7 @@ void Domino::make_move(int move){
     else
         std::cout << "Invalid move in make_move function " << move << std::endl;
 
-    history.push_back(move);
+    history.add(move);
 }
 
 void Domino::undo_move(){
@@ -501,7 +501,7 @@ void Domino::undo_move(){
     else
         std::cout << "Invalid move in undo_move function " << move << std::endl;
 
-    history.pop_back();
+    history.pop();
 }
 
 void Domino::clear_history(){
@@ -654,14 +654,61 @@ void Domino::edge_cycle(int e1, int e2, int e3, int e4){
     edges[e1] = tmp;
 };
 
+
+//swap two corners
+//low level
 void Domino::edge_swap(int e1, int e2){
     int tmp = edges[e1];
     edges[e1] = edges[e2];
     edges[e2] = tmp;
 };
 
+//swap two edges
+//low level
 void Domino::corner_swap(int c1, int c2){
     int tmp = corners[c1];
     corners[c1] = corners[c2];
     corners[c2] = tmp;
 };
+
+//Definitions for Algorithm class --------------------------------------------------------------------
+
+Algorithm::Algorithm(){
+
+}
+
+
+
+void Algorithm::add(int move) {
+    moves.push_back(move);
+}
+
+void Algorithm::pop() {
+    moves.pop_back();
+}
+
+void Algorithm::print(int verbose) {
+    for (int i = 0; i < size(); i++) {
+        std::cout << MOVECHARS[moves[i]] << " ";
+    }
+    std::cout << "(" << size() << ")";
+    std::cout << std::endl;
+}
+
+int Algorithm::size() {
+    return moves.size();
+}
+
+void Algorithm::clear() {
+    moves.clear();
+}
+
+int &Algorithm::operator[](size_t i) {
+    return moves[i];
+}
+
+// void Algorithm::operator=(Algorithm a) {
+//     moves = a.moves;
+// }
+
+//End definitions for Algorithm class --------------------------------------------------------------------
