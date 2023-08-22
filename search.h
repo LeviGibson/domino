@@ -3,4 +3,5 @@
 
 namespace Search{
     int find_optimal(Domino domino, int print = 0, int noExtraQts = 0);
+    extern Algorithm solution;
 }

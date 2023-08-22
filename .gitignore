@@ -5,3 +5,4 @@ cornerQuarterTurns.bin
 hashKeys.bin
 pruningTable.bin
 a.out
+*.csv

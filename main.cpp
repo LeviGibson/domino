@@ -3,6 +3,7 @@
 #include "corners.h"
 #include "pruning.h"
 #include "htrSubsetStats.h"
+#include "features.h"
 #include <iostream>
 #include <cstring>
 
@@ -15,6 +16,6 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    htrSubsetStats::calculate_stats(10000);
+    Features::generate_features(1000);
     
 };
