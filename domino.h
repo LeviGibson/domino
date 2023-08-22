@@ -18,6 +18,9 @@ const int F2 = 4;
 const int B2 = 5;
 const int L2 = 6;
 
+#define GOOD_2QT 1
+#define BAD_2QT 0
+
 void init_hash();
 
 //yes or no, does this binary file exist?
@@ -37,6 +40,7 @@ class Algorithm{
         void print(int verbose=1);
         int size();
         void clear();
+        int qt_count();
         std::vector<int> moves;
 
         int& operator[] (size_t i);
@@ -89,6 +93,20 @@ class Domino{
         //low-level function
         //set the corners to a state, with the same indexing system used in the corner_index function
         void set_corners_from_index(int index);
+
+        //gets the number of misoriented corners and edges
+        //it also orients the cube, so there's no case with 6 misoriented corners, it would read as 2 misoriented corners
+        //the orientation follows the corners, so something like 2c8e is valid, but 6c0e is not.
+        int get_htr_subset();
+
+        //returns name from index of htr subset
+        std::string htr_subset_name(int subset);
+
+        //is this the good or bad case for 2qt?
+        //see HTR subset
+        //it's a very niche function
+        //returns GOOD_2QT or BAD_2QT
+        int two_quarterturn_type();
 
         //undos the last move
         //can stack, so you can call it multiple times in a row

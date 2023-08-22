@@ -350,6 +350,8 @@ void Domino::set_corners_from_index(int index){
     }
 }
 
+
+
 //Random const arrays needed by the print_domino function
 const char UD_COLORS[8] = {'w', 'w', 'w', 'w', 'y', 'y', 'y', 'y'};
 // the first index is weather or not the corner is in HTR
@@ -477,7 +479,130 @@ void Domino::make_move(int move){
     history.add(move);
 }
 
-void Domino::undo_move(){
+int QUARTER_TURN_HTR_SUBSET_INDICIES[6] = {0, 1, 2, 4, 5, 6};
+int ORIENTED = 0;
+int MISORIENTED = 1;
+//semi-oriented is for 4c cases where you can't take the orientation relative to the corners
+int SEMIORIENTED = 2;
+
+
+std::string CORNERTYPE_NAMES[7] = {"0qt ", "1qt ", "2qt(a) ", "2qt(b) ", "3qt ", "4qt ", "5qt "};
+std::string MISCORNER_NAMES[3] = {"0c", "2c", "4c"};
+std::string MISEDGE_NAMES[5] = {"0e", "2e", "4e", "6e", "8e"};
+
+std::string Domino::htr_subset_name(int subset){
+    std::string name;
+    int cornerType = subset / 15;
+    subset -= cornerType * 15;
+
+    int misorientedEdges = subset / 3;
+    subset -= 3*misorientedEdges;
+
+    int misorientedCorners = subset;
+
+    return CORNERTYPE_NAMES[cornerType] + MISCORNER_NAMES[misorientedCorners] + MISEDGE_NAMES[misorientedEdges];
+}
+
+int Domino::get_htr_subset() {
+    int orientation = -1;
+
+    int misorientedCorners = 0;
+    for (int i = 0; i < 8; i++) {
+        if (i%2 != corners[i] % 2){
+            misorientedCorners++;
+        }
+    }
+
+    if (misorientedCorners > 4)
+        orientation = MISORIENTED;
+    else if (misorientedCorners < 4)
+        orientation = ORIENTED;
+    else if (misorientedCorners == 4)
+        orientation = SEMIORIENTED;
+
+    if (orientation == MISORIENTED){
+        misorientedCorners = 8-misorientedCorners;
+    }
+    
+    int misorientedEdges = 0;
+
+    for (int i = 0; i < 8; i++) {
+        if (i%2 != edges[i] % 2){
+            misorientedEdges++;
+        }
+    }
+
+    if (orientation == MISORIENTED)
+        misorientedEdges = 8-misorientedEdges;
+    if (orientation == SEMIORIENTED && misorientedEdges > 4)
+        misorientedEdges = 8-misorientedEdges;
+
+    int cornerType = QUARTER_TURN_HTR_SUBSET_INDICIES[qt_count()];
+    //add extra index for bad 2qt
+    if (cornerType == 2 && two_quarterturn_type() == BAD_2QT)
+        cornerType++;
+
+    //save space because neither of these can be odd
+    misorientedEdges /= 2;
+    misorientedCorners /= 2;
+    //cornerType 0-6
+    //corners 0-2
+    //edges 0-4
+    return (misorientedCorners) + (misorientedEdges * 3) + (cornerType * 3 * 5);
+}
+
+//why is this function so hard to write it should be really easy
+//there's probably a way easier implementation of this but idc
+int Domino::two_quarterturn_type() {
+    assert(qt_count() == 2);
+
+    int f1 = 0;
+    int f2 = 0;
+    for (int i = 0; i < 8; i++) {
+        if (i % 2 != corners[i] % 2){
+            if (i <= 3)
+                f1++;
+            else
+                f2++;
+        }
+    }
+
+    if (f1 == 4 || f2 == 4)
+        return BAD_2QT;
+
+    if (f1 == 1 || f2 == 1)
+        return GOOD_2QT;
+
+    f1 = 0;
+    f2 = 0;
+
+    for (int i = 0; i < 8; i++) {
+        if (i % 2 != corners[i] % 2){
+            if (i <= 3)
+                f1+=i;
+            else
+                f2+=i-4;
+        }
+    }
+
+    if (f1 == 1 || f1 == 5)
+        f1 = 0;
+    else
+        f1 = 1;
+
+    if (f2 == 1 || f2 == 5)
+        f2 = 0;
+    else
+        f2 = 1;
+
+    if (f1 == f2)
+        return BAD_2QT;
+    else
+        return GOOD_2QT;
+}
+
+void Domino::undo_move()
+{
     //changes are being made to the cube, so the corner index is no longer valid
     savedCornerIndex = -1;
 
@@ -639,8 +764,10 @@ void Domino::set_random_state(){
 void Domino::set_random_htr_state() {
     savedCornerIndex = -1;
     reset();
-    
-    for (int i = 0; i < 100; i++) {
+
+    int parity = (std::rand() % 2);
+
+    for (int i = 0; i < 100 + parity; i++) {
         make_move((std::rand() % 5) + 2);
     }
     
@@ -711,6 +838,15 @@ int Algorithm::size() {
 
 void Algorithm::clear() {
     moves.clear();
+}
+
+int Algorithm::qt_count() {
+    int count = 0;
+    for (int i = 0; i < moves.size(); i++){
+        if (moves[i] == U || moves[i] == UP)
+            count++;
+    }
+    return count;
 }
 
 int &Algorithm::operator[](size_t i) {

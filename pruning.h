@@ -1,3 +1,4 @@
+#pragma once
 #include "domino.h"
 
 //The size of the hash table
