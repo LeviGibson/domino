@@ -15,8 +15,9 @@ int main(){
     for (int i = 0; i < 10000; i++)
     {
         dom.set_random_state();
-        if (dom.qt_count() == 1) {
-            Search::find_optimal(dom, 1, 0);
+        if (dom.qt_count() == 0) {
+            Search::find_optimal(dom, 1, 1);
+            std::cout << dom.corner_index() <<std::endl; 
         }
     }
     

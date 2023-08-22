@@ -62,6 +62,7 @@ class Domino{
 
         void parse_alg(std::string alg);
         void set_random_state();
+        void set_random_htr_state();
         //reset to solved state
         void reset();
         

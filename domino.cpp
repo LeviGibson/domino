@@ -636,6 +636,16 @@ void Domino::set_random_state(){
     }
 }
 
+void Domino::set_random_htr_state() {
+    savedCornerIndex = -1;
+    reset();
+    
+    for (int i = 0; i < 100; i++) {
+        make_move((std::rand() % 5) + 2);
+    }
+    
+}
+
 // very low level, cycles four corners to make a move
 void Domino::corner_cycle(int c1, int c2, int c3, int c4){
     int tmp = corners[c4];
