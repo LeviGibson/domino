@@ -63,13 +63,14 @@ void write_header(std::ofstream* file){
 
 void Features::generate_features(int numRows) {
     std::ofstream myfile;
-    myfile.open("example.csv");
+    myfile.open("dataset.csv");
 
     Row dataset = Row();
 
     write_header(&myfile);
 
     for (int i = 0; i < numRows; i++) {
+        printf("%d\n", i);
         dataset.domino = Domino();
         dataset.domino.set_random_state();
         dataset.htrSubset = dataset.domino.get_htr_subset();

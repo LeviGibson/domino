@@ -40,6 +40,17 @@ int search(int depth, int extended, Domino* domino){
         domino->make_move(move);
         ply++;
 
+        int newPruningTableRes = Pruning::proximity_to_solved(domino);
+        // && (newPruningTableRes >= pruningTableRes || newPruningTableRes == -1)
+        if (extended && (newPruningTableRes == -1 || newPruningTableRes >= pruningTableRes)){
+            domino->undo_move();
+            ply--;
+            continue;
+            // if (std::abs(pruningTableRes - newPruningTableRes) >= 2 && newPruningTableRes != -1){
+            //     printf("%d, %d\n", pruningTableRes, newPruningTableRes);
+            // }
+        }
+
         if (NO_EXTRA_QUARTER_TURNS && (move == U || move == UP)){
             if (domino->qt_count() > quarterTurnCount){
                 domino->undo_move();

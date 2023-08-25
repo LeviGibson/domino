@@ -18,23 +18,30 @@ void Pruning::search(int depth, Domino* domino){
     // I think this is what chaining is
     // Or something of the sort
     // getting rid of collisions
-    if (entry->proximity != -1 && dominoHash != entry->key){
-        int numCollisions = 1;
-        while (1){
-            collisions++;
-            int index = (dominoHash % HASH_DIVISOR) + numCollisions;
-            assert(index < (HASH_TABLE_SIZE));
-            entry = &hashTable[index];
-            if (entry->proximity != -1 && dominoHash != entry->key){
-                numCollisions++;
-                // printf("Everything just broke wheee try again plz\n");
-            } else {
-                break;
+    if (entry->proximity != -1){
+        if (dominoHash == entry->key){
+            entry->proximity = std::min(entry->proximity, ply);
+        } else {
+            int numCollisions = 1;
+            while (1){
+                collisions++;
+                int index = (dominoHash % HASH_DIVISOR) + numCollisions;
+                assert(index < (HASH_TABLE_SIZE));
+                entry = &hashTable[index];
+                if (entry->proximity != -1 && dominoHash != entry->key){
+                    numCollisions++;
+                    // printf("Everything just broke wheee try again plz\n");
+                } else {
+                    break;
+                }
             }
         }
     }
 
-    entry->proximity = ply;
+    if (entry->proximity == -1)
+        entry->proximity = ply;
+    else
+        entry->proximity = std::min(ply, entry->proximity);
     entry->key = dominoHash;
     
     if (depth == 0)

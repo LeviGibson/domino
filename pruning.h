@@ -3,7 +3,7 @@
 
 //The size of the hash table
 //adjust this if there are problems
-#define HASH_TABLE_SIZE 10000000ULL
+#define HASH_TABLE_SIZE 50000000ULL
 
 //Only do he mod operation with this value, not HASH_TABLE_SIZE
 //add a bit of padding at the end of the array
@@ -20,7 +20,7 @@ namespace Pruning{
         U64 key;
     } HashEntry;
 
-    const int PRUNING_DEPTH = 8;
+    const int PRUNING_DEPTH = 9;
     extern HashEntry hashTable[HASH_TABLE_SIZE];
     //call this after calling init_hash()
     void init_pruning();

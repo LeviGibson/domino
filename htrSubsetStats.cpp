@@ -5,7 +5,7 @@
 float lengths[104];
 float samples[104];
 
-void htrSubsetStats::calculate_stats(int numSamples) {
+void htrSubsetStats::calculate_stats(int numSamples, int noExtraQt) {
     memset(lengths, 0, sizeof(lengths));
     memset(samples, 0, sizeof(lengths));
 
@@ -19,8 +19,10 @@ void htrSubsetStats::calculate_stats(int numSamples) {
             i--;
             continue;
         }
+
+        int isSolvableWithoutExtraQts = dom.qt_count() > 1;
         
-        int optimal = Search::find_optimal(dom, 0);
+        int optimal = Search::find_optimal(dom, 0, std::min(noExtraQt, isSolvableWithoutExtraQts));
         lengths[subset] += (float)optimal;
         samples[subset]++;
         printf("%d\n", i);
