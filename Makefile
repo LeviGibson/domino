@@ -1,5 +1,5 @@
 all:
-	clang++ *.cpp -O3 -o domino -pg
+	clang++ *.cpp -O3 -o domino
 gdb:
 	clang++ *.cpp -g
 clean:

@@ -16,7 +16,7 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    htrSubsetStats::calculate_stats(100000, 1);
+    htrSubsetStats::calculate_stats(50000, 0);
     
     // Features::generate_features(1000000);
     // htrSubsetStats::calculate_stats(100000, 1);
