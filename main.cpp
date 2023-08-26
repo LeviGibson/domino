@@ -16,7 +16,14 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    htrSubsetStats::calculate_stats(50000, 0);
+    htrSubsetStats::calculate_subset_probabilities(1000000);
+    // Domino dom = Domino();
+    // for (size_t i = 0; i < 10000; i++) {
+    //     dom.set_random_state();
+    //     Search::find_optimal(dom);
+    //     printf("%d\n", i);
+    // }
+    
     
     // Features::generate_features(1000000);
     // htrSubsetStats::calculate_stats(100000, 1);
