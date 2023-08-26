@@ -89,7 +89,7 @@ int Search::find_optimal(Domino domino, int print, int noExtraQts){
     int result;
     domino.clear_history();
 
-    for (int depth = 0; depth < 20; depth++){
+    for (int depth = 0; depth < 30; depth++){
         // std::cout << "searching depth " << depth << std::endl;
         result = search(depth, 0, &domino);
         if (result != UNSOLVED)

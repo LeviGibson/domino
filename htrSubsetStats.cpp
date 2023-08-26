@@ -21,9 +21,9 @@ void htrSubsetStats::calculate_stats(int numSamples, int noExtraQt) {
             continue;
         }
 
-        int isSolvableWithoutExtraQts = dom.qt_count() > 1;
+        int isSolvableWithoutExtraQts = dom.qt_count() > 1 || dom.get_htr_subset() == 23 || dom.get_htr_subset() == 0;
         
-        int optimal = Search::find_optimal(dom, 0, std::min(noExtraQt, isSolvableWithoutExtraQts));
+        int optimal = Search::find_optimal(dom, 1, std::min(noExtraQt, isSolvableWithoutExtraQts));
         // int noEQToptimal = 10000;
         // if (isSolvableWithoutExtraQts){
         //     noEQToptimal = Search::find_optimal(dom, 0, 1);

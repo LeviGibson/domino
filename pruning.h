@@ -20,7 +20,7 @@ namespace Pruning{
         U64 key;
     } HashEntry;
 
-    const int PRUNING_DEPTH = 9;
+    const int PRUNING_DEPTH = 10;
     extern HashEntry hashTable[HASH_TABLE_SIZE];
     //call this after calling init_hash()
     void init_pruning();
