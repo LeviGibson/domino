@@ -6,6 +6,7 @@
 #define CORNER_INDEX_COUNT 40320
 
 #define U64 unsigned long long
+#define MAX_DR_INDEX 1625702399U
 
 //ordinal values of each move (for make_move function)
 //this program does not do D moves because they're dumb
@@ -41,6 +42,7 @@ class Algorithm{
         int size();
         void clear();
         int qt_count();
+        int count_move(int move);
         std::vector<int> moves;
 
         int& operator[] (size_t i);
@@ -92,8 +94,27 @@ class Domino{
         int corner_index();
 
         //low-level function
+        //each edge case has an index, and this returns the index of the corner case
+        //there are 40320 edge cases
+        int edge_index();
+
+        //low-level function
         //set the corners to a state, with the same indexing system used in the corner_index function
         void set_corners_from_index(int index);
+
+        //low-level function
+        //set the edges to a state, with the same indexing system used in the edge_index function
+        void set_edges_from_index(int index);
+
+
+        //get index of the domino
+        //similar to a hash
+        //goes from 0 to 1,625,702,399 so it's quite large
+        unsigned int domino_index();
+
+        //sets whole domino position from an index
+        //indecies can be found with the domino_index() function
+        void set_domino_from_index(unsigned int index);
 
         //gets the number of misoriented corners and edges
         //it also orients the cube, so there's no case with 6 misoriented corners, it would read as 2 misoriented corners

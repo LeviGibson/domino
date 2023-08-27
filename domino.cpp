@@ -344,6 +344,22 @@ int Domino::corner_index(){
     return ret;
 }
 
+int Domino::edge_index() {
+    int path[8] = {-1, -1, -1, -1, -1, -1, -1};
+    int indecies[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+
+    for (int c = 0; c < 8; c++){
+        path[c] = indecies[edges[c]];
+        for (int i = edges[c]; i < 8; i++){
+            indecies[i]--;
+        }
+    }
+
+    int ret = 5040*path[0] + 720*path[1] + 120*path[2] + 24*path[3] + 6*path[4] + 2*path[5] + 1*path[6];
+
+    return ret;
+}
+
 //low-level function
 //set the corners to a state, with the same indexing system used in the corner_index function
 void Domino::set_corners_from_index(int index){
@@ -372,7 +388,42 @@ void Domino::set_corners_from_index(int index){
     }
 }
 
+void Domino::set_edges_from_index(int index) {
+    clear_history();
 
+    //make sure index is within range
+    assert(index >= 0);
+    assert(index < 40320);
+
+    //generate the path from the index
+    //see Domino::corner_index()
+    int path[8] = {-1, -1, -1, -1, -1, -1, 0};
+    int treesizes[8] = {5040, 720, 120, 24, 6, 2, 1, 0};
+    for (int i = 0; i < 7; i++){
+        int node = index / treesizes[i];
+        path[i] = node;
+        index -= node * treesizes[i];
+    }
+
+    int indecies[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    for (int i = 0; i < 8; i++){
+        edges[i] = indecies[path[i]];
+        for (int j = path[i]; j < 8; j++){
+            indecies[j] = indecies[j+1];
+        }
+    }
+}
+
+unsigned int Domino::domino_index() {
+    return ((unsigned int)40320 * (unsigned int)corner_index()) + (unsigned int)edge_index();
+}
+
+void Domino::set_domino_from_index(unsigned int index) {
+    unsigned int cornerId = index / 40320;
+    unsigned int edgeId = index % 40320;
+    set_corners_from_index(cornerId);
+    set_edges_from_index(edgeId);
+}
 
 //Random const arrays needed by the print_domino function
 const char UD_COLORS[8] = {'w', 'w', 'w', 'w', 'y', 'y', 'y', 'y'};
@@ -866,6 +917,15 @@ int Algorithm::qt_count() {
     int count = 0;
     for (int i = 0; i < moves.size(); i++){
         if (moves[i] == U || moves[i] == UP)
+            count++;
+    }
+    return count;
+}
+
+int Algorithm::count_move(int move) {
+    int count = 0;
+    for (int i = 0; i < moves.size(); i++){
+        if (moves[i] == move)
             count++;
     }
     return count;

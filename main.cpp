@@ -8,8 +8,6 @@
 #include <iostream>
 #include <cstring>
 
-
-
 int main(){
     
     // srand ( time(NULL) );
@@ -17,10 +15,9 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    Domino dom = Domino();
-    dom.set_state(0, 1, 4, 5, 7, 2, 3, 6, 7, 5, 0, 4, 6, 2, 3, 1);
-
     Features::generate_features(1000000);
+
+    Domino dom = Domino();
 
     // htrSubsetStats::calculate_subset_probabilities(1000000);
     // Domino dom = Domino();
