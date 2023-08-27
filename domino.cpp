@@ -282,6 +282,28 @@ U64 Domino::domino_hash(){
     return hash;
 }
 
+void Domino::set_state(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7) {
+    corners[0] = c0;
+    corners[1] = c1;
+    corners[2] = c2;
+    corners[3] = c3;
+    corners[4] = c4;
+    corners[5] = c5;
+    corners[6] = c6;
+    corners[7] = c7;
+
+    edges[0] = e0;
+    edges[1] = e1;
+    edges[2] = e2;
+    edges[3] = e3;
+    edges[4] = e4;
+    edges[5] = e5;
+    edges[6] = e6;
+    edges[7] = e7;
+
+    clear_history();
+}
+
 int binary_file_exists(std::string path){
     FILE *codefile;
    if(codefile=fopen(path.c_str(),"r")) {
@@ -395,13 +417,13 @@ void Domino::print_domino(){
 
 void Domino::print_pieces(){
     for (int i = 0; i < 8; i++){
-        printf("%d ", corners[i]);
+        printf("%d, ", corners[i]);
     }
 
-    printf("\n");
+    // printf("\n");
 
     for (int i = 0; i < 8; i++){
-        printf("%d ", edges[i]);
+        printf("%d, ", edges[i]);
     }
 
     printf("\n");

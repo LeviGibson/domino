@@ -17,6 +17,7 @@ namespace Pruning{
 
     typedef struct {
         int proximity;
+        int proximityNoExtraQt;
         U64 key;
     } HashEntry;
 
@@ -32,5 +33,5 @@ namespace Pruning{
     //returns how far the domino is away from being solved
     //only works if it is relatively close to being solved (within "PRUNING_DEPTH" amount of moves)
     //otherwise returns -1
-    int proximity_to_solved(Domino* dom);
+    int proximity_to_solved(Domino* dom, int noExtraQt = 0);
 }

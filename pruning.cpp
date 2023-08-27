@@ -42,6 +42,14 @@ void Pruning::search(int depth, Domino* domino){
         entry->proximity = ply;
     else
         entry->proximity = std::min(ply, entry->proximity);
+
+    if (domino->history.qt_count() == domino->qt_count()){
+        if (entry->proximityNoExtraQt == -1)
+            entry->proximityNoExtraQt = ply;
+        else
+            entry->proximity = std::min(ply, entry->proximity);
+    }
+
     entry->key = dominoHash;
     
     if (depth == 0)
@@ -60,15 +68,19 @@ void Pruning::search(int depth, Domino* domino){
     
 }
 
-int Pruning::proximity_to_solved(Domino *dom) {
+int Pruning::proximity_to_solved(Domino *dom, int noExtraQt) {
     U64 key = dom->domino_hash();
     HashEntry* entry = &hashTable[key % HASH_DIVISOR];
 
     if (entry->proximity == -1)
         return -1;
 
-    if (key == entry->key)
-        return entry->proximity;
+    if (key == entry->key) {
+        if (noExtraQt)
+            return entry->proximityNoExtraQt;
+        else
+            return entry->proximity;
+    }
     else {
         int numCollisions = 1;
         while (1){
@@ -78,7 +90,10 @@ int Pruning::proximity_to_solved(Domino *dom) {
                 return -1;
 
             if (entry->key == key){
-                return entry->proximity;
+                if (noExtraQt)
+                    return entry->proximityNoExtraQt;
+                else
+                    return entry->proximity;
             } else {
                 numCollisions++;
             }
@@ -90,6 +105,7 @@ int Pruning::proximity_to_solved(Domino *dom) {
 void reset_pruning_table(){
     for (int i = 0; i < HASH_TABLE_SIZE; i++) {
         Pruning::hashTable[i].proximity = -1;
+        Pruning::hashTable[i].proximityNoExtraQt = -1;
         Pruning::hashTable[i].key = -1ULL;
     }
 }

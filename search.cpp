@@ -14,7 +14,7 @@ int search(int depth, int extended, Domino* domino){
         return ply;
     }
 
-    int pruningTableRes = Pruning::proximity_to_solved(domino);
+    int pruningTableRes = Pruning::proximity_to_solved(domino, NO_EXTRA_QUARTER_TURNS);
     if (!extended && pruningTableRes != -1){
         // assert(depth == 0);
         depth = pruningTableRes;
@@ -89,8 +89,8 @@ int Search::find_optimal(Domino domino, int print, int noExtraQts){
     int result;
     domino.clear_history();
 
-    for (int depth = 0; depth < 30; depth++){
-        // std::cout << "searching depth " << depth << std::endl;
+    for (int depth = 0; depth < 1000; depth++){
+        std::cout << "searching depth " << depth << std::endl;
         result = search(depth, 0, &domino);
         if (result != UNSOLVED)
             break;

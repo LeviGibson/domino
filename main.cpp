@@ -3,6 +3,7 @@
 #include "corners.h"
 #include "pruning.h"
 #include "htrSubsetStats.h"
+#include "scramblePrinter.h"
 #include "features.h"
 #include <iostream>
 #include <cstring>
@@ -16,14 +17,20 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    htrSubsetStats::calculate_subset_probabilities(1000000);
+    Domino dom = Domino();
+    dom.set_state(0, 1, 4, 5, 7, 2, 3, 6, 7, 5, 0, 4, 6, 2, 3, 1);
+
+    Features::generate_features(1000000);
+
+    // htrSubsetStats::calculate_subset_probabilities(1000000);
     // Domino dom = Domino();
     // for (size_t i = 0; i < 10000; i++) {
     //     dom.set_random_state();
     //     Search::find_optimal(dom);
     //     printf("%d\n", i);
     // }
-    
+
+    // Features::generate_features(1000000);
     
     // Features::generate_features(1000000);
     // htrSubsetStats::calculate_stats(100000, 1);

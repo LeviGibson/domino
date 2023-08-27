@@ -73,8 +73,20 @@ void Features::generate_features(int numRows) {
         printf("%d\n", i);
         dataset.domino = Domino();
         dataset.domino.set_random_state();
+
+        //get 1qt 4c4e cases
+        while (dataset.domino.get_htr_subset() != 23){
+            dataset.domino.set_random_state();
+        }
+
         dataset.htrSubset = dataset.domino.get_htr_subset();
-        dataset.label = Search::find_optimal(dataset.domino);
+        dataset.label = Search::find_optimal(dataset.domino, 0, 1);
+        if (dataset.label == 0){
+            dataset.domino.print_domino();
+            dataset.domino.print_pieces();
+            dataset.label = Search::find_optimal(dataset.domino, 1, 1);
+            exit(0);
+        }
 
         memset(dataset.edges, 0, sizeof(dataset.edges));
         memset(dataset.corners, 0, sizeof(dataset.corners));

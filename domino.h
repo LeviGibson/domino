@@ -77,6 +77,7 @@ class Domino{
         void print_domino();
 
         //prints all the pieces, in integer form
+        //can be passed to set_state()
         void print_pieces();
 
         //prints all the moves that have been done to the domino
@@ -125,6 +126,10 @@ class Domino{
         //Generates a 64-bit hash key for the domino
         //THIS GENERATES THE SAME HASH FOR MIRRORS
         U64 domino_hash();
+
+        //Used for debugging when the search function bugs out
+        //just set a direct state from a list of edges and corners
+        void set_state(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7);
 
         Algorithm history;
 
