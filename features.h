@@ -9,6 +9,8 @@ namespace Features{
         int htrSubset;
         int corners[8][8];
         int edges[8][8];
+        int icorners[8][8];
+        int iedges[8][8];
         int label;
     } Row;
 

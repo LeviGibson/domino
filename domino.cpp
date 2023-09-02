@@ -471,7 +471,7 @@ void Domino::print_pieces(){
         printf("%d, ", corners[i]);
     }
 
-    // printf("\n");
+    printf("\n");
 
     for (int i = 0; i < 8; i++){
         printf("%d, ", edges[i]);
@@ -783,6 +783,51 @@ int Domino::is_repetition_corners(int move){
     }
 
     return 0;
+}
+
+void swap(int* a, int* b){
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+void Domino::invert(){
+    int solved[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    int tmpCorners[8];
+    memcpy(tmpCorners, corners, sizeof(corners));
+
+    for (int i = 0; i < 8; i++) {
+        int hasSwapped = 0;
+        for (int j = 0; j < 7; j++) {
+            if (tmpCorners[j] > tmpCorners[j+1]){
+                swap(&solved[j], &solved[j+1]);
+                swap(&tmpCorners[j], &tmpCorners[j+1]);
+                hasSwapped = 1;
+            }
+        }
+        if (!hasSwapped)
+            break;
+    }
+    
+    memcpy(corners, solved, sizeof(corners));
+
+    memcpy(solved, SOLVED_STATE_1, sizeof(solved));
+    memcpy(tmpCorners, edges, sizeof(edges));
+
+    for (int i = 0; i < 8; i++) {
+        int hasSwapped = 0;
+        for (int j = 0; j < 7; j++) {
+            if (tmpCorners[j] > tmpCorners[j+1]){
+                swap(&solved[j], &solved[j+1]);
+                swap(&tmpCorners[j], &tmpCorners[j+1]);
+                hasSwapped = 1;
+            }
+        }
+        if (!hasSwapped)
+            break;
+    }
+    
+    memcpy(edges, solved, sizeof(corners));
 }
 
 void Domino::parse_alg(std::string alg){

@@ -15,9 +15,7 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    Features::generate_features(1000000);
-
-    Domino dom = Domino();
+    Features::generate_features(500000);
 
     // htrSubsetStats::calculate_subset_probabilities(1000000);
     // Domino dom = Domino();

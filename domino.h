@@ -148,6 +148,11 @@ class Domino{
         //THIS GENERATES THE SAME HASH FOR MIRRORS
         U64 domino_hash();
 
+        //Invert the DR
+        //Basically just NISS
+        //Call it twice to return to it's original state
+        void invert();
+
         //Used for debugging when the search function bugs out
         //just set a direct state from a list of edges and corners
         void set_state(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7);
