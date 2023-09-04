@@ -15,7 +15,13 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    Features::generate_features(500000);
+    Domino dom = Domino();
+
+    for (int i = 0; i < 104; i++) {
+        if (Features::VALID_HTR_SUBSETS[i]){
+            Features::generate_features(5000, i, dom.htr_subset_name(i) + ".csv");
+        }
+    }
 
     // Domino dom = Domino();
     // dom.parse_alg("R2 U R2");

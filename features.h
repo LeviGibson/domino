@@ -14,5 +14,7 @@ namespace Features{
         int label;
     } Row;
 
-    void generate_features(int numRows);
+    extern int VALID_HTR_SUBSETS[104];
+
+    void generate_features(int numRows, int subset = -1, std::string name = "dataset.csv");
 }

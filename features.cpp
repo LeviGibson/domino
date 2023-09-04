@@ -2,8 +2,9 @@
 #include "search.h"
 #include <fstream>
 #include <cstring>
+#include <cassert>
 
-int VALID_HTR_SUBSETS[104] = {1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 
+int Features::VALID_HTR_SUBSETS[104] = {1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 
     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 
     0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 
     1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1};
@@ -20,7 +21,7 @@ void write_feature(Features::Row* row, std::ofstream* file){
 
     int htrSubset = row->domino.get_htr_subset();
     for (size_t i = 0; i < 104; i++) {
-        if (!VALID_HTR_SUBSETS[i])
+        if (!Features::VALID_HTR_SUBSETS[i])
             continue;
         *file << (i == htrSubset) << ",";
     }
@@ -88,7 +89,7 @@ void write_header(std::ofstream* file){
     // }
 
     for (int i = 0; i < 104; i++) {
-        if (!VALID_HTR_SUBSETS[i])
+        if (!Features::VALID_HTR_SUBSETS[i])
             continue;
         *file << d.htr_subset_name(i) << ",";
     }
@@ -96,23 +97,28 @@ void write_header(std::ofstream* file){
     
 }
 
-void Features::generate_features(int numRows) {
+void Features::generate_features(int numRows, int subset, std::string name) {
     std::ofstream myfile;
-    myfile.open("dataset.csv");
+    myfile.open(name);
 
     Row dataset = Row();
 
     write_header(&myfile);
+
+    if (subset != -1)
+        assert(VALID_HTR_SUBSETS[subset]);
 
     for (int i = 0; i < numRows; i++) {
         printf("%d\n", i);
         dataset.domino = Domino();
         dataset.domino.set_random_state();
 
-        //get 1qt 4c4e cases
-        // while (dataset.domino.get_htr_subset() != 23){
-        //     dataset.domino.set_random_state();
-        // }
+        //get spesific subset case
+        if (subset != -1){
+            while (dataset.domino.get_htr_subset() != subset){
+                dataset.domino.set_random_state();
+            }
+        }
 
         dataset.htrSubset = dataset.domino.get_htr_subset();
         dataset.label = Search::find_optimal(dataset.domino, 0, 0);
