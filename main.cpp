@@ -17,6 +17,21 @@ int main(){
 
     Features::generate_features(500000);
 
+    // Domino dom = Domino()
+    // for (int i = 0; i < 1000; i++) {
+    //     dom.set_random_state();
+    //     dom.calculate_block_score();
+    //     for (int i = 0; i < 8; i++) {
+    //         printf("%d ", dom.block_score[i]);
+    //     }
+    //     printf("\n");
+        
+    //     // dom.print_domino();
+    //     Search::find_optimal(dom, 1);
+    //     printf("\n");
+    // }
+    
+
     // htrSubsetStats::calculate_subset_probabilities(1000000);
     // Domino dom = Domino();
     // for (size_t i = 0; i < 10000; i++) {

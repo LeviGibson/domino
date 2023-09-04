@@ -12,6 +12,12 @@ int VALID_HTR_SUBSETS[104] = {1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
 void write_feature(Features::Row* row, std::ofstream* file){
     *file << row->label << ",";
 
+    row->domino.calculate_block_score();
+    for (int i = 0; i < 8; i++) {
+        *file << row->domino.block_score[i] << ",";
+    }
+    
+
     int htrSubset = row->domino.get_htr_subset();
     for (size_t i = 0; i < 104; i++) {
         if (!VALID_HTR_SUBSETS[i])
@@ -51,6 +57,11 @@ void write_header(std::ofstream* file){
     Domino d = Domino();
 
     *file << "label,";
+    
+    for (int i = 0; i < 8; i++) {
+        *file << "pairtype" << i << ",";
+    }
+    
 
     // for (int i = 0; i < 8; i++) {
     //     for (int j = 0; j < 8; j++) {
@@ -99,9 +110,9 @@ void Features::generate_features(int numRows) {
         dataset.domino.set_random_state();
 
         //get 1qt 4c4e cases
-        while (dataset.domino.get_htr_subset() != 23){
-            dataset.domino.set_random_state();
-        }
+        // while (dataset.domino.get_htr_subset() != 23){
+        //     dataset.domino.set_random_state();
+        // }
 
         dataset.htrSubset = dataset.domino.get_htr_subset();
         dataset.label = Search::find_optimal(dataset.domino, 0, 0);
@@ -115,12 +126,12 @@ void Features::generate_features(int numRows) {
             dataset.edges[i][dataset.domino.edges[i]] = 1;
             dataset.corners[i][dataset.domino.corners[i]] = 1;
         }
-        dataset.domino.invert();
-        for (int i = 0; i < 8; i++) {
-            dataset.iedges[i][dataset.domino.edges[i]] = 1;
-            dataset.icorners[i][dataset.domino.corners[i]] = 1;
-        }
-        dataset.domino.invert();
+        // dataset.domino.invert();
+        // for (int i = 0; i < 8; i++) {
+        //     dataset.iedges[i][dataset.domino.edges[i]] = 1;
+        //     dataset.icorners[i][dataset.domino.corners[i]] = 1;
+        // }
+        // dataset.domino.invert();
         
         write_feature(&dataset, &myfile);
     }

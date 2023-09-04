@@ -830,6 +830,42 @@ void Domino::invert(){
     memcpy(edges, solved, sizeof(corners));
 }
 
+int clockwiseEdge[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+int counterClockwiseEdge[8] = {3, 0, 1, 2, 7, 4, 5, 6};
+
+// [corner position] [transform index]
+int edgePos[8][8] = {
+    {0, 1, 2, 3, 4, 5, 6, 7},
+    {1, 2, 3, 0, 5, 6, 7, 4},
+    {2, 3, 0, 1, 6, 7, 4, 5},
+    {3, 0, 1, 2, 7, 4, 5, 6},
+    {4, 5, 6, 7, 0, 3, 2, 1},
+    {5, 6, 7, 4, 3, 2, 1, 0},
+    {DB, DL, DF, DR, UF, UR, UB, UL},
+    {DL, DF, DR, DB, UR, UB, UL, UF},
+};
+
+int counterClockwiseEquivilent[8] = {3, 2, 1, 0, 7, 6, 5, 4};
+
+int Domino::calculate_block_score() {
+    memset(block_score, 0, sizeof(block_score));
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (clockwiseEdge[corners[i]] == edges[edgePos[i][j]]){
+                block_score[j]++;
+            }
+        }
+
+        for (int j = 0; j < 8; j++) {
+            if (counterClockwiseEdge[corners[i]] == edges[edgePos[i][j]]){
+                block_score[counterClockwiseEquivilent[j]]++;
+            }
+        }
+    }
+
+    return 0;
+}
+
 void Domino::parse_alg(std::string alg){
     std::stringstream ss(alg);
 
