@@ -17,16 +17,47 @@ int main(){
 
     Features::generate_features(500000);
 
-    // Domino dom = Domino()
+    // Domino dom = Domino();
+    // dom.parse_alg("R2 U R2");
+    // dom.calculate_block_score();
+
+    // for (int i = 0; i < 8; i++) {
+    //     printf("%d ", dom.block_score[i]);
+    // }
+    // printf("\n");
+
+    // dom.invert();
+    // dom.print_domino();
+
+    // dom.calculate_block_score();
+    // for (int i = 0; i < 8; i++) {
+    //     printf("%d ", dom.block_score[i]);
+    // }
+    // printf("\n");
+
+    // Domino dom = Domino();
     // for (int i = 0; i < 1000; i++) {
     //     dom.set_random_state();
     //     dom.calculate_block_score();
-    //     for (int i = 0; i < 8; i++) {
-    //         printf("%d ", dom.block_score[i]);
-    //     }
-    //     printf("\n");
+        // for (int i = 0; i < 8; i++) {
+        //     // if (i == 4)
+        //     //     printf("\n");
+        //     printf("%d ", dom.block_score[i]);
+        // }
+        // printf("\n");
+
+        // dom.invert();
+
+
+        // dom.calculate_block_score();
+        // for (int i = 0; i < 8; i++) {
+        //     // if (i == 4)
+        //     //     printf("\n");
+        //     printf("%d ", dom.block_score[i]);
+        // }
+        // printf("\n");
         
-    //     // dom.print_domino();
+        // dom.print_domino();
     //     Search::find_optimal(dom, 1);
     //     printf("\n");
     // }

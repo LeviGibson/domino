@@ -835,15 +835,24 @@ int counterClockwiseEdge[8] = {3, 0, 1, 2, 7, 4, 5, 6};
 
 // [corner position] [transform index]
 int edgePos[8][8] = {
-    {0, 1, 2, 3, 4, 5, 6, 7},
-    {1, 2, 3, 0, 5, 6, 7, 4},
-    {2, 3, 0, 1, 6, 7, 4, 5},
-    {3, 0, 1, 2, 7, 4, 5, 6},
-    {4, 5, 6, 7, 0, 3, 2, 1},
-    {5, 6, 7, 4, 3, 2, 1, 0},
-    {DB, DL, DF, DR, UF, UR, UB, UL},
-    {DL, DF, DR, DB, UR, UB, UL, UF},
+    {UB, UR, UF, UL, DF, DR, DB, DL},
+    {UR, UF, UL, UB, DL, DF, DR, DB},
+    {UF, UL, UB, UR, DB, DL, DF, DR},
+    {UL, UB, UR, UF, DR, DB, DL, DF},
+    {DF, DR, DB, DL, UB, UR, UF, UL},
+    {DR, DB, DL, DF, UL, UB, UR, UF},
+    {DB, DL, DF, DR, UF, UL, UB, UR},
+    {DL, DF, DR, DB, UR, UF, UL, UB},
 };
+
+//Block
+//L2 U' L2
+//L2 U2 L2
+//Non-block
+//L2
+//D' L2
+//L2 B2 L2
+//D L2
 
 int counterClockwiseEquivilent[8] = {3, 2, 1, 0, 7, 6, 5, 4};
 
