@@ -2,6 +2,7 @@
 #include "search.h"
 #include "corners.h"
 #include "pruning.h"
+#include "blonks.h"
 #include "htrSubsetStats.h"
 #include "scramblePrinter.h"
 #include "features.h"
@@ -15,13 +16,20 @@ int main(){
     init_hash();
     Pruning::init_pruning();
 
-    Domino dom = Domino();
+    // Domino dom = Domino();
+    Features::generate_features(100000, 23);
 
-    for (int i = 0; i < 104; i++) {
-        if (Features::VALID_HTR_SUBSETS[i]){
-            Features::generate_features(5000, i, dom.htr_subset_name(i) + ".csv");
-        }
-    }
+    // for (int i = 0; i < 104; i++) {
+    //     if (Features::VALID_HTR_SUBSETS[i]){
+    //         Features::generate_features(5000, i, dom.htr_subset_name(i) + ".csv");
+    //     }
+    // }
+
+    // dom.set_random_state();
+    // Search::find_optimal(dom, 1);
+    // printf("starting\n");
+    // int bl = Blonks::solution_length_2x2x1(&dom, 0);
+    // printf("%d\n", bl);
 
     // Domino dom = Domino();
     // dom.parse_alg("R2 U R2");

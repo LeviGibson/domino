@@ -186,6 +186,30 @@ int Domino::are_corners_solved_htr(){
         return 1;
 }
 
+int clockwiseEdge[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+int counterClockwiseEdge[8] = {3, 0, 1, 2, 7, 4, 5, 6};
+
+int Domino::is_2x2x1_solved(int index) {
+    // if (corners[index] == index){
+    //     if (edges[clockwiseEdge[index]] == clockwiseEdge[index] && edges[counterClockwiseEdge[index]] == counterClockwiseEdge[index])
+    //         return 1;
+    // }
+    int cornerLoc = -1;
+    for (int i = 0; i < 8; i++) {
+        if (corners[i] == index)
+            cornerLoc = i;
+    }
+    
+    assert(index >= 0 && index <= 7);
+
+    if ((index < 4 && cornerLoc < 4) || (index >= 4 && cornerLoc >= 4)){
+        if (edges[clockwiseEdge[cornerLoc]] == clockwiseEdge[index] && edges[counterClockwiseEdge[cornerLoc]] == counterClockwiseEdge[index])
+            return 1;
+    }
+
+    return 0;
+}
+
 
 void print_hash(U64 hash){
 
@@ -830,8 +854,6 @@ void Domino::invert(){
     memcpy(edges, solved, sizeof(corners));
 }
 
-int clockwiseEdge[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-int counterClockwiseEdge[8] = {3, 0, 1, 2, 7, 4, 5, 6};
 
 // [corner position] [transform index]
 int edgePos[8][8] = {

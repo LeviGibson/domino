@@ -62,6 +62,10 @@ class Domino{
         //includes states like U D'
         int are_corners_solved();
 
+        //Is the 2x2x1 solved around corner "index"?
+        //idk this function finds out
+        int is_2x2x1_solved(int index);
+
         //are corners solved relative to HTR?
         //includes states like U D'
         int are_corners_solved_htr();
