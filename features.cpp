@@ -1,5 +1,7 @@
 #include "features.h"
 #include "search.h"
+#include "htr.h"
+#include "blonks.h"
 #include <fstream>
 #include <cstring>
 #include <cassert>
@@ -14,22 +16,37 @@ void write_feature(Features::Row* row, std::ofstream* file){
     *file << row->label << ",";
 
     row->domino.calculate_block_score();
-    for (int i = 0; i < 8; i++) {
-        *file << row->domino.block_score[i] << ",";
-    }
+    
+    // *file << HTR::htr_length(&row->domino, 0) << ",";
+    // *file << HTR::htr_length(&row->domino, 1) << ",";
     
 
-    int htrSubset = row->domino.get_htr_subset();
-    for (size_t i = 0; i < 104; i++) {
-        if (!Features::VALID_HTR_SUBSETS[i])
-            continue;
-        *file << (i == htrSubset) << ",";
+    // int htrSubset = row->domino.get_htr_subset();
+    // for (size_t i = 0; i < 104; i++) {
+    //     if (!Features::VALID_HTR_SUBSETS[i])
+    //         continue;
+    //     *file << (i == htrSubset) << ",";
+    // }
+
+    row->domino.get_misoriented();
+    for (size_t j = 0; j < 16; j++) {
+        *file << row->domino.misoriented_normal[j] << ",";
     }
 
-    // for (size_t i = 0; i < 8; i++) {
-    //     for (size_t j = 0; j < 8; j++) {
-    //         *file << row->corners[i][j] << ",";
-    //     }
+    for (size_t j = 0; j < 16; j++) {
+        *file << row->domino.misoriented_normal[j] << ",";
+    }
+
+    row->domino.calculate_block_score();
+    for (size_t j = 0; j < 16; j++) {
+        *file << row->domino.block_score[j] << ",";
+    }
+    
+    // for (int i = 0; i < 8; i++){
+    //     *file << Blonks::solution_length_2x2x1(&row->domino, i, 0) << ",";
+    // }
+    // for (int i = 0; i < 8; i++){
+    //     *file << Blonks::solution_length_2x2x1(&row->domino, i, 1) << ",";
     // }
 
     // for (size_t i = 0; i < 8; i++) {
@@ -59,9 +76,22 @@ void write_header(std::ofstream* file){
 
     *file << "label,";
     
-    for (int i = 0; i < 8; i++) {
-        *file << "pairtype" << i << ",";
+    for (int i = 0; i < 16; i++) {
+        *file << "nMis" << i << ",";
     }
+    for (int i = 0; i < 16; i++) {
+        *file << "iMis" << i << ",";
+    }
+    for (int i = 0; i < 16; i++) {
+        *file << "nblonk" << i << ",";
+    }
+
+    // for (int i = 0; i < 8; i++) {
+    //     *file << "n2x2x1" << i << ",";
+    // }
+    // for (int i = 0; i < 8; i++) {
+    //     *file << "i2x2x1" << i << ",";
+    // }
     
 
     // for (int i = 0; i < 8; i++) {
@@ -88,11 +118,11 @@ void write_header(std::ofstream* file){
     //     }
     // }
 
-    for (int i = 0; i < 104; i++) {
-        if (!Features::VALID_HTR_SUBSETS[i])
-            continue;
-        *file << d.htr_subset_name(i) << ",";
-    }
+    // for (int i = 0; i < 104; i++) {
+    //     if (!Features::VALID_HTR_SUBSETS[i])
+    //         continue;
+    //     *file << d.htr_subset_name(i) << ",";
+    // }
     *file << "\n";
     
 }
@@ -121,7 +151,7 @@ void Features::generate_features(int numRows, int subset, std::string name) {
         }
 
         dataset.htrSubset = dataset.domino.get_htr_subset();
-        dataset.label = Search::find_optimal(dataset.domino, 0, 0);
+        dataset.label = Search::find_optimal(dataset.domino, 0, 1);
 
         memset(dataset.edges, 0, sizeof(dataset.edges));
         memset(dataset.corners, 0, sizeof(dataset.corners));

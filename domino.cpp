@@ -306,7 +306,41 @@ U64 Domino::domino_hash(){
     return hash;
 }
 
-void Domino::set_state(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7) {
+void Domino::get_misoriented() {
+    memset(misoriented_normal, 0, sizeof(misoriented_normal));
+    memset(misoriented_inverse, 0, sizeof(misoriented_inverse));
+
+    //Find misoriented corners and edges
+    for (int i = 0; i < 8; i++) {
+        if (i%2 != corners[i] % 2)
+            misoriented_normal[i] = 1;
+        else
+            misoriented_normal[i] = 0;
+
+        if (i%2 != edges[i] % 2)
+            misoriented_normal[i+8] = 1;
+        else
+            misoriented_normal[i+8] = 0;
+    }
+
+    Domino dom;
+    memcpy(&dom, this, sizeof(dom));
+    
+    for (int i = 0; i < 8; i++) {
+        if (i%2 != dom.corners[i] % 2)
+            misoriented_inverse[i] = 1;
+        else
+            misoriented_inverse[i] = 0;
+
+        if (i%2 != dom.edges[i] % 2)
+            misoriented_inverse[i+8] = 1;
+        else
+            misoriented_inverse[i+8] = 0;
+    }
+}
+
+void Domino::set_state(int c0, int c1, int c2, int c3, int c4, int c5, int c6, int c7, int e0, int e1, int e2, int e3, int e4, int e5, int e6, int e7)
+{
     corners[0] = c0;
     corners[1] = c1;
     corners[2] = c2;
@@ -1041,6 +1075,14 @@ int Algorithm::count_move(int move) {
             count++;
     }
     return count;
+}
+
+std::string Algorithm::to_string() {
+    std::string ret = "";
+    for (int i = 0; i < size(); i++) {
+        ret += MOVECHARS[moves[i]] + " ";
+    }
+    return ret;
 }
 
 int &Algorithm::operator[](size_t i) {

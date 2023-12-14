@@ -3,7 +3,10 @@
 #include <fstream>
 #include <cassert>
 
-Pruning::HashEntry Pruning::hashTable[HASH_TABLE_SIZE];
+// Pruning::HashEntry Pruning::hashTable[HASH_TABLE_SIZE];
+// Pruning::HashEntry *hashTable;
+Pruning::HashEntry *hashTable;
+
 int Pruning::ply;
 int Pruning::nodes;
 int Pruning::collisions;
@@ -20,7 +23,8 @@ void Pruning::search(int depth, Domino* domino){
     // getting rid of collisions
     if (entry->proximity != -1){
         if (dominoHash == entry->key){
-            entry->proximity = std::min(entry->proximity, ply);
+            assert(std::min(int(entry->proximity), ply) > -200);
+            entry->proximity = (int8_t)std::min(int(entry->proximity), ply);
         } else {
             int numCollisions = 1;
             while (1){
@@ -41,13 +45,13 @@ void Pruning::search(int depth, Domino* domino){
     if (entry->proximity == -1)
         entry->proximity = ply;
     else
-        entry->proximity = std::min(ply, entry->proximity);
+        entry->proximity = (int8_t)std::min(ply, int(entry->proximity));
 
     if (domino->history.qt_count() == domino->qt_count()){
         if (entry->proximityNoExtraQt == -1)
             entry->proximityNoExtraQt = ply;
         else
-            entry->proximity = std::min(ply, entry->proximity);
+            entry->proximity = (int8_t)std::min(ply, (int)entry->proximity);
     }
 
     entry->key = dominoHash;
@@ -72,8 +76,9 @@ int Pruning::proximity_to_solved(Domino *dom, int noExtraQt) {
     U64 key = dom->domino_hash();
     HashEntry* entry = &hashTable[key % HASH_DIVISOR];
 
-    if (entry->proximity == -1)
+    if (entry->proximity == -1){
         return -1;
+    }
 
     if (key == entry->key) {
         if (noExtraQt)
@@ -104,9 +109,9 @@ int Pruning::proximity_to_solved(Domino *dom, int noExtraQt) {
 
 void reset_pruning_table(){
     for (int i = 0; i < HASH_TABLE_SIZE; i++) {
-        Pruning::hashTable[i].proximity = -1;
-        Pruning::hashTable[i].proximityNoExtraQt = -1;
-        Pruning::hashTable[i].key = -1ULL;
+        hashTable[i].proximity = -1;
+        hashTable[i].proximityNoExtraQt = -1;
+        hashTable[i].key = -1ULL;
     }
 }
 
@@ -127,21 +132,27 @@ void save_table(){
         assert(0);
     }
 
-    file.write((const char*)Pruning::hashTable, sizeof(Pruning::hashTable));
+    file.write((const char*)hashTable, sizeof(Pruning::HashEntry) * HASH_TABLE_SIZE);
     file.close();
 }
 
 void load_table(){
     FILE *fin = fopen("pruningTable.bin", "rb");
-    int _tmp = fread(Pruning::hashTable, sizeof(Pruning::HashEntry), HASH_TABLE_SIZE, fin);
+    int _tmp = fread(hashTable, sizeof(Pruning::HashEntry), HASH_TABLE_SIZE, fin);
     fclose(fin);
 }
 
 void Pruning::init_pruning(){
+    hashTable = (HashEntry*) malloc(sizeof(HashEntry) * HASH_TABLE_SIZE);
+
     if (binary_file_exists("pruningTable.bin")){
         load_table();
     } else {
         generate_table();
         save_table();
     }
+}
+
+void Pruning::free_pruning() {
+    free(hashTable);
 }

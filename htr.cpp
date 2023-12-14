@@ -1,12 +1,11 @@
-#include "blonks.h"
-#include <cassert>
+#include "htr.h"
 
-int blonkPly = 0;
+int htrPly = 0;
 #define UNSOLVED -1
 
-int blonkSearch(int depth, int index, Domino* dom){
-    if (dom->is_2x2x1_solved(index)){
-        return blonkPly;
+int blonkSearch(int depth, Domino* dom){
+    if (dom->get_htr_subset() == 0){
+        return htrPly;
     }
 
     if (depth <= 0)
@@ -16,12 +15,12 @@ int blonkSearch(int depth, int index, Domino* dom){
         if (dom->is_repetition(move))
             continue;
         
-        blonkPly++;
+        htrPly++;
         dom->make_move(move);
 
-        int res = blonkSearch(depth-1, index, dom);
+        int res = blonkSearch(depth-1, dom);
 
-        blonkPly--;
+        htrPly--;
         dom->undo_move();
 
         if (res != UNSOLVED)
@@ -31,22 +30,20 @@ int blonkSearch(int depth, int index, Domino* dom){
     return UNSOLVED;
 }
 
-int Blonks::solution_length_2x2x1(Domino *domino, int index, int invert) {
+int HTR::htr_length(Domino *domino, int inverse) {
     Domino dom = *domino;
-    assert(index >= 0 && index <= 7);
-
-    if (invert)
+    if (inverse)
         dom.invert();
 
     for (int i = 0; i < 20; i++) {
-        blonkPly = 0;
+        htrPly = 0;
         dom.clear_history();
 
-        int res = blonkSearch(i, index, &dom);
+        int res = blonkSearch(i, &dom);
         if (res != UNSOLVED)
             return res;
     }
     
-    printf("ERROR COULD NOT FIND 2x2x2 WITH INDEX %d\n", index);
+    printf("ERROR COULD NOT FIND DOM WITH INDEX\n");
     return -1;
 }

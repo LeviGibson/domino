@@ -2,6 +2,8 @@ all:
 	clang++ *.cpp -O3 -o domino
 gdb:
 	clang++ *.cpp -g
+gprof:
+	clang++ *.cpp -O3 -pg -o domino
 clean:
 	rm -f *.bin
 	rm -f domino

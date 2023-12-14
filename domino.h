@@ -43,6 +43,7 @@ class Algorithm{
         void clear();
         int qt_count();
         int count_move(int move);
+        std::string to_string();
         std::vector<int> moves;
 
         int& operator[] (size_t i);
@@ -128,7 +129,7 @@ class Domino{
         //returns name from index of htr subset
         std::string htr_subset_name(int subset);
 
-        //is this the good or bad case for 2qt?
+        //is this the good or badcase for 2qt?
         //see HTR subset
         //it's a very niche function
         //returns GOOD_2QT or BAD_2QT
@@ -160,6 +161,13 @@ class Domino{
         //get a score for how many blocks there
         int block_score[16];
         int calculate_block_score();
+
+        //misoriented pieces on normal and inverse
+        //8 corners than 8 edges
+        int misoriented_normal[16];
+        int misoriented_inverse[16];
+        //populates arrays above
+        void get_misoriented();
 
         //Used for debugging when the search function bugs out
         //just set a direct state from a list of edges and corners

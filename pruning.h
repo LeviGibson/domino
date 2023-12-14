@@ -3,7 +3,8 @@
 
 //The size of the hash table
 //adjust this if there are problems
-#define HASH_TABLE_SIZE 50000000ULL
+#define HASH_TABLE_SIZE (200000000ULL)
+//500,000,000
 
 //Only do he mod operation with this value, not HASH_TABLE_SIZE
 //add a bit of padding at the end of the array
@@ -15,16 +16,22 @@ namespace Pruning{
     extern int nodes;
     extern int collisions;
 
+    #pragma pack (1)
+
     typedef struct {
-        int proximity;
-        int proximityNoExtraQt;
+        int8_t proximity;
+        int8_t proximityNoExtraQt;
         U64 key;
     } HashEntry;
 
-    const int PRUNING_DEPTH = 10;
-    extern HashEntry hashTable[HASH_TABLE_SIZE];
+    #pragma pack (0)
+
+
+    const int PRUNING_DEPTH = 11;
+    // extern HashEntry hashTable[HASH_TABLE_SIZE];
     //call this after calling init_hash()
     void init_pruning();
+    void free_pruning();
     
     //internal functions dont worry abt these
     extern int ply;

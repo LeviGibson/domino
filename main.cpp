@@ -3,21 +3,37 @@
 #include "corners.h"
 #include "pruning.h"
 #include "blonks.h"
+#include "htr.h"
 #include "htrSubsetStats.h"
 #include "scramblePrinter.h"
 #include "features.h"
+#include "allcases.h"
 #include <iostream>
 #include <cstring>
 
 int main(){
+
+    // printf("%s\n", argv[1]);
+    // printf("%d\n", );
+    // exit(0);
     
-    // srand ( time(NULL) );
     Corners::init_corners();
     init_hash();
     Pruning::init_pruning();
 
-    // Domino dom = Domino();
-    Features::generate_features(100000, 23);
+    Cases::generate();
+
+    // for (int i = 0; i < 100000; i++) {
+    //     dom.set_random_state();
+    //     if (dom.get_htr_subset() != 35)
+    //         continue;
+
+    //     Search::find_optimal(dom);
+    //     if (Search::solution.qt_count() == 1){
+    //         Search::solution.print();
+    //     }
+    // }
+    
 
     // for (int i = 0; i < 104; i++) {
     //     if (Features::VALID_HTR_SUBSETS[i]){
@@ -27,8 +43,8 @@ int main(){
 
     // dom.set_random_state();
     // Search::find_optimal(dom, 1);
-    // printf("starting\n");
-    // int bl = Blonks::solution_length_2x2x1(&dom, 0);
+
+    // int bl = HTR::htr_length(&dom);
     // printf("%d\n", bl);
 
     // Domino dom = Domino();
@@ -100,5 +116,7 @@ int main(){
 
     // dom.print_domino();
     // Search::find_optimal(dom);
+
+    Pruning::free_pruning();
 
 };
