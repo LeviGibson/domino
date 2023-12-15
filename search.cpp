@@ -6,9 +6,13 @@
 int ply = 0;
 int NO_EXTRA_QUARTER_TURNS = 0;
 
-Algorithm Search::solution;
+// Algorithm Search::solution;
 
-int search(int depth, int extended, Domino* domino){
+Search::Search(){
+    
+}
+
+int Search::search(int depth, int extended, Domino* domino){
     if (domino->is_domino_solved()){
         Search::solution = domino->history;
         return ply;
@@ -80,16 +84,6 @@ int search(int depth, int extended, Domino* domino){
     
 }
 
-void print_solution(){
-    unsigned int vecSize = Search::solution.size();
-
-    for(unsigned int i = 0; i < vecSize; i++){
-        std::cout << MOVECHARS[Search::solution[i]] << " ";
-    }
-    std::cout << "(" << Search::solution.size() << ")";
-    std::cout << std::endl;
-}
-
 int Search::find_optimal(Domino domino, int print, int noExtraQts){
     solution = Algorithm();
 
@@ -100,16 +94,13 @@ int Search::find_optimal(Domino domino, int print, int noExtraQts){
     domino.clear_history();
 
     for (int depth = 0; depth < 1000; depth++){
-        // std::cout << "searching depth " << depth << std::endl;
         result = search(depth, 0, &domino);
         if (result != UNSOLVED)
             break;
     }
 
-    // if (print())
-    // std::cout << result << std::endl;
     if (print)
-        print_solution();
+        solution.print();
 
     return solution.size();
 }

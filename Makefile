@@ -1,5 +1,5 @@
 all:
-	clang++ *.cpp -O3 -o domino
+	clang++ *.cpp -lpthread -O3 -o domino
 gdb:
 	clang++ *.cpp -g
 gprof:

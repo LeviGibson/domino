@@ -135,6 +135,8 @@ void Features::generate_features(int numRows, int subset, std::string name) {
 
     write_header(&myfile);
 
+    Search search = Search();
+
     if (subset != -1)
         assert(VALID_HTR_SUBSETS[subset]);
 
@@ -151,7 +153,7 @@ void Features::generate_features(int numRows, int subset, std::string name) {
         }
 
         dataset.htrSubset = dataset.domino.get_htr_subset();
-        dataset.label = Search::find_optimal(dataset.domino, 0, 1);
+        dataset.label = search.find_optimal(dataset.domino, 0, 1);
 
         memset(dataset.edges, 0, sizeof(dataset.edges));
         memset(dataset.corners, 0, sizeof(dataset.corners));

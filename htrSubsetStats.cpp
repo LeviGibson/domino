@@ -17,6 +17,7 @@ void reset_all(){
 
 void htrSubsetStats::calculate_stats(int numSamples, int noExtraQt) {
     reset_all();
+    Search search = Search();
 
     Domino dom = Domino();
     for (int i = 0; i < numSamples; i++) {
@@ -30,13 +31,13 @@ void htrSubsetStats::calculate_stats(int numSamples, int noExtraQt) {
 
         int isSolvableWithoutExtraQts = dom.qt_count() > 1 || dom.get_htr_subset() == 23 || dom.get_htr_subset() == 0;
         
-        int optimal = Search::find_optimal(dom, 1, std::min(noExtraQt, isSolvableWithoutExtraQts));
+        int optimal = search.find_optimal(dom, 1, std::min(noExtraQt, isSolvableWithoutExtraQts));
         // int noEQToptimal = 10000;
         // if (isSolvableWithoutExtraQts){
         //     noEQToptimal = Search::find_optimal(dom, 0, 1);
         // }
         
-        qturns[subset] += Search::solution.qt_count();
+        qturns[subset] += search.solution.qt_count();
         lengths[subset] += (float)optimal;
         samples[subset]++;
         total++;
